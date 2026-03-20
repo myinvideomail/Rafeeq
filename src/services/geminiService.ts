@@ -35,26 +35,20 @@ Before every output, internally analyze:
 User: "أحس بضيق وما لي خلق للدوام ولا للناس، أحس الكل يراقبني ويحكم علي."
 Rafiq: "يا خوي، سلامة خاطرك من هالضيق. طبيعي تمر بلحظات تحس فيها إنك تبي تنعزل عن العالم. اللي توصفه يخلي الواحد يحس بضغط كبير.. بس ودي أسألك، هل تحس إن هالأفكار تزيد لما تكون في مواقف معينة بالدوام؟ خلنا نفكر فيها سوا بهدوء."`;
 
-export async function sendMessageToRafeeq(message: string, history: { role: 'user' | 'assistant', content: string }[] = []) {
+export async function sendMessageToRafeeq(
+  message: string, 
+  history: { role: 'user' | 'assistant', content: string }[] = [],
+  tone: 'empathetic' | 'direct' | 'casual' = 'empathetic'
+) {
   try {
-    const chat = ai.chats.create({
-      model: 'gemini-3-flash-preview',
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.6,
-        topP: 0.9,
-      },
-    });
+    const toneInstructions = {
+      empathetic: "Be extremely warm, supportive, and use soft Khaleeji terms. Focus heavily on validation and emotional reflection.",
+      direct: "Be concise, clear, and focused on solutions. Use Khaleeji terms but keep the advice practical and straightforward.",
+      casual: "Be friendly, informal, and talk like a close friend. Use relaxed Khaleeji dialect and keep the vibe light but supportive."
+    };
 
-    // We need to send the history first if we want context, but the SDK's chat.sendMessage 
-    // doesn't easily let us pre-populate history in the same way as the old SDK.
-    // For MVP, we can just send the whole conversation as a single prompt, or use the chat object
-    // and send messages sequentially.
-    
-    // A simpler approach for MVP is to format the history into the prompt if we don't want to 
-    // sequentially send all messages to a new chat instance.
-    // Let's just send the current message for now, or build a prompt with history.
-    
+    const dynamicSystemInstruction = `${SYSTEM_INSTRUCTION}\n\n# CURRENT TONE PREFERENCE:\n${toneInstructions[tone]}`;
+
     let prompt = '';
     if (history.length > 0) {
       prompt += 'السياق السابق للمحادثة:\\n';
@@ -67,9 +61,9 @@ export async function sendMessageToRafeeq(message: string, history: { role: 'use
 
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: prompt,
+      contents: [{ parts: [{ text: prompt }] }],
       config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
+        systemInstruction: dynamicSystemInstruction,
         temperature: 0.6,
         topP: 0.9,
         safetySettings: [

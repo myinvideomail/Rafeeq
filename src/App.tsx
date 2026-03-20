@@ -12,6 +12,7 @@ import MoodTracker from './pages/MoodTracker';
 import Exercises from './pages/Exercises';
 import Library from './pages/Library';
 import Subscription from './pages/Subscription';
+import Profile from './pages/Profile';
 import Login from './pages/Login';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
@@ -69,6 +70,12 @@ export default function App() {
             <Route path="/subscription" element={
               <ProtectedRoute>
                 <Subscription />
+                <Navigation />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
                 <Navigation />
               </ProtectedRoute>
             } />

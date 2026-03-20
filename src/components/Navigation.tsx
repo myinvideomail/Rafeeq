@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { MessageCircle, Activity, BookOpen, HeartPulse, Star } from 'lucide-react';
+import { MessageCircle, Activity, BookOpen, HeartPulse, Star, User } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export default function Navigation() {
@@ -9,7 +9,7 @@ export default function Navigation() {
     { to: '/mood', icon: Activity, label: 'مزاجي' },
     { to: '/exercises', icon: HeartPulse, label: 'تمارين' },
     { to: '/library', icon: BookOpen, label: 'مكتبة' },
-    { to: '/subscription', icon: Star, label: 'بريميوم' },
+    { to: '/profile', icon: User, label: 'حسابي' },
   ];
 
   return (

@@ -148,7 +148,7 @@ export default function Chat() {
       });
 
       const history = messages.slice(-10).map(m => ({ role: m.role, content: m.content }));
-      const response = await sendMessageToRafeeq(userMessageContent, history);
+      const response = await sendMessageToRafeeq(userMessageContent, history, profile.aiTone || 'empathetic');
 
       await addDoc(collection(db, 'messages'), {
         userId: user.uid,
